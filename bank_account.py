@@ -1,26 +1,8 @@
-
 class BankAccount:
     def __init__(self, account_number: int, owner: str, balance=0):
         self.account_number = account_number
         self.owner = owner
         self.balance = balance
-
-    def deposit(self, amount):
-        if amount <= 0:
-            raise ValueError("Please enter a number greater than zero.")
-
-        self.balance += amount
-        print(f"{self.owner} deposited ${amount:.2f}. New balance: ${self.balance:.2f}")
-
-    def withdraw(self, amount):
-        if amount <= 0:
-            raise ValueError("Please enter a number greater than zero.")
-
-        if amount > self.balance:
-            raise ValueError("Insufficient funds.")
-
-        self.balance -= amount
-        print(f"New balance: ${self.balance:.2f}")
 
     def run_menu(self):
         while True:
@@ -54,23 +36,58 @@ class BankAccount:
             except ValueError as e:
                 print(f"Error: {e}")
 
+    def deposit(self, amount):
+        if amount <= 0:
+            raise ValueError("Please enter a number greater than zero.")
 
-account = BankAccount(1223245, "Kelly")
-account.run_menu()
+        self.balance += amount
+        print(
+            f"{self.owner} deposited ${amount:.2f}. "
+            f"New balance: ${self.balance:.2f}"
+        )
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            raise ValueError("Please enter a number greater than zero.")
+
+        if amount > self.balance:
+            raise ValueError("Insufficient funds.")
+
+        self.balance -= amount
+        print(f"New balance: ${self.balance:.2f}")
+
+    def __str__(self):
+        return (
+            f"Account Number: {self.account_number}, "
+            f"Owner: {self.owner}, "
+            f"Balance: ${self.balance:.2f}"
+        )
 
 
+class SavingsAccount(BankAccount):
+    def __init__(self, account_number, owner, balance, interest_rate):
+        super().__init__(account_number, owner, balance)
+        self.interest_rate = interest_rate
 
+    def apply_interest(self):
+        interest = self.balance * (self.interest_rate / 100)
+        self.balance += interest
 
+    def __str__(self):
+        return (
+            f"{super().__str__()}, "
+            f"Interest Rate: {self.interest_rate}%"
+        )
 
+account = SavingsAccount(1223245, "Kelly", 1000, 5)
 
+print(account)
 
+account.deposit(200)
+print(account)
 
+account.withdraw(100)
+print(account)
 
-
-
-
-
-
-# print(account.owner)
-# print(account.account_number)
-# print(account.deposit(int(input("Enter your deposit: "))))
+account.apply_interest()
+print(account)
